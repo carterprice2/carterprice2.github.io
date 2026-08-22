@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Autonomous forklift pallet detection and orientation estimation at Georgia-Pacific.">
+    <title>Pallet detection and orientation — Carter Price</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style>
+        .case-page { max-width: 720px; margin: 40px auto 80px; padding: 0 20px; }
+        .case-page .back { display: inline-block; margin-bottom: 16px; }
+        .case-page .meta { color: #555; }
+    </style>
+</head>
+<body>
+    <article class="case-page">
+        <p><a class="back" href="../index.html#portfolio">← Portfolio</a></p>
+        <p class="meta">Georgia-Pacific · Automation &amp; Robotics R&amp;D · 2019</p>
+        <h1>Autonomous forklift pallet detection and orientation</h1>
+        <p>At Georgia-Pacific in 2019, I built a pallet detection and orientation system for autonomous forklifts from the ground up, using a stereo depth camera (an Intel RealSense-era sensor) mounted on the vehicle. Since no suitable training data existed, I collected it myself from manual forklift operation, then trained a ResNet-backbone object detector from scratch to localize pallets in the RGB stream.</p>
+        <p>To get orientation, I used the detector's bounding box to index into the corresponding region of the depth image, estimating the pallet's pose from that RGB-D fusion rather than RGB alone. That pose estimate fed directly into trajectory planning, giving the forklift what it needed to autonomously approach and pick up a pallet without a person in the loop — a full zero-to-one build, from data collection through a model driving real vehicle behavior.</p>
+    </article>
+</body>
+</html>

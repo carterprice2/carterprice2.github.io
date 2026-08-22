@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Real-time multi-camera vision system for battery cell sorting at Redwood Materials.">
+    <title>Battery cell sorting vision — Carter Price</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style>
+        .case-page { max-width: 720px; margin: 40px auto 80px; padding: 0 20px; }
+        .case-page .back { display: inline-block; margin-bottom: 16px; }
+        .case-page .meta { color: #555; }
+    </style>
+</head>
+<body>
+    <article class="case-page">
+        <p><a class="back" href="../index.html#portfolio">← Portfolio</a></p>
+        <p class="meta">Redwood Materials · Sr. Software Engineer · 2022–2023</p>
+        <h1>Real-time multi-camera vision for battery cell sorting</h1>
+        <p>At Redwood Materials, I built a real-time computer vision system for battery cell sorting that combined 3D sensing with multi-camera classification. Volumetric measurement came from a laser-line triangulation sensor — a line laser projected onto the cell surface and read by an angled camera, from which we estimated height and used it for object detection and volume estimation. That gave us the physical geometry of each cell as it moved through the line.</p>
+        <p>For classification, we built two camera cells of six Lucid Vision Labs cameras each — one monochrome cell dedicated to OCR, shooting overhead and multiple side angles to read cell markings, and one RGB cell feeding a trained classification model. Both cells used controlled, pulsed lighting timed to a short exposure window, which let us freeze fast-moving cells without motion blur instead of relying on longer exposures.</p>
+        <p>On the compute side, image acquisition ran through C++ drivers I wrote to interface with the cameras and pull frames in over Gigabit Ethernet, feeding a rack-mounted, multi-GPU compute module dedicated to running the vision models in real time. It was a full-stack build — sensor selection and hardware integration, custom driver code, and the ML/OCR pipeline — all engineered to run inline on a live production sorting line rather than offline.</p>
+    </article>
+</body>
+</html>
