@@ -263,7 +263,7 @@
                                 <li>Sole engineer for a subscription learning platform: Expo/React Native (iOS, Android) and Next.js 16 web on a Turborepo/pnpm monorepo, backed by Supabase.</li>
                                 <li>Built LLM-based safety classification for user-generated content — group chat, video and challenge comments — with an admin moderation queue, flag review, and surrounding-context surfacing.</li>
                                 <li>Implemented dual billing through Stripe and Apple In-App Purchase, including trials, entitlement checks, and partner code redemption on the web side.</li>
-                                <li>Drove the app through Apple App Review compliance; shipped 50+ versioned releases. Currently in private beta ahead of App Store launch.</li>
+                                <li>Drove the app through Apple App Review compliance; shipped 50+ versioned releases. Now live on the App Store.</li>
                             </ul>
                         </div>
                         <hr>
@@ -420,57 +420,27 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    <ul id="filters" class="clearfix">
-                        <li>
-                            <span class="filter active" data-filter="vision robotics product">All</span>
-                        </li>
-                    </ul>
-
                     <div id="portfoliolist">
 
-                        <div class="portfolio vision" data-cat="vision">
-                            <div class="portfolio-wrapper">
-                                <a href="work/battery-cell-sorting.html">
-                                    <span class="portfolio-tile">Battery cell sorting</span>
-                                </a>
-                                <div class="label">
-                                    <div class="label-text">
-                                        <a class="text-title" href="work/battery-cell-sorting.html">Battery cell sorting vision</a>
-                                        <span class="text-category">Redwood Materials · Vision</span>
-                                    </div>
-                                    <div class="label-bg"></div>
-                                </div>
-                            </div>
+                        <div class="portfolio vision">
+                            <a class="portfolio-wrapper" href="work/battery-cell-sorting.html">
+                                <span class="portfolio-tile">Battery cell sorting</span>
+                                <span class="portfolio-subtitle">Vision</span>
+                            </a>
                         </div>
 
-                        <div class="portfolio robotics" data-cat="robotics">
-                            <div class="portfolio-wrapper">
-                                <a href="work/pallet-detection.html">
-                                    <span class="portfolio-tile">Pallet detection</span>
-                                </a>
-                                <div class="label">
-                                    <div class="label-text">
-                                        <a class="text-title" href="work/pallet-detection.html">Pallet detection and orientation</a>
-                                        <span class="text-category">Georgia-Pacific · Robotics</span>
-                                    </div>
-                                    <div class="label-bg"></div>
-                                </div>
-                            </div>
+                        <div class="portfolio robotics">
+                            <a class="portfolio-wrapper" href="work/pallet-detection.html">
+                                <span class="portfolio-tile">Pallet detection</span>
+                                <span class="portfolio-subtitle">Robotics</span>
+                            </a>
                         </div>
 
-                        <div class="portfolio product" data-cat="product">
-                            <div class="portfolio-wrapper">
-                                <a href="work/ycu.html">
-                                    <span class="portfolio-tile">YCU</span>
-                                </a>
-                                <div class="label">
-                                    <div class="label-text">
-                                        <a class="text-title" href="work/ycu.html">YCU</a>
-                                        <span class="text-category">ycu.app · Product</span>
-                                    </div>
-                                    <div class="label-bg"></div>
-                                </div>
-                            </div>
+                        <div class="portfolio product">
+                            <a class="portfolio-wrapper" href="work/ycu.html">
+                                <span class="portfolio-tile">YCU</span>
+                                <span class="portfolio-subtitle">ycu.app</span>
+                            </a>
                         </div>
 
                     </div>
@@ -486,7 +456,7 @@
 
 
     <!-- Footer -->
-    <footer id="contact" class="text-center footer-above" style="background-image: url(img/shuttle.jpeg); background-size: cover;">
+    <footer id="contact" class="text-center footer-above" style="background-image: url(img/shuttle.jpeg); background-size: cover; background-position: center;">
         <div class="arrow-down-white"></div>
         <div class="container-fluid">
             <div class="row">
@@ -496,75 +466,15 @@
                             <span class="border-white color-white">AIM HIGH</span>
                         </h2>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <!-- <div id="test1" class="gmap3"></div> -->
-
-
-
-                <div class="col-md-8 col-md-offset-2">
-                    <!-- <address class="text-center nest-address">
-
-
-                        <i class="icon-location"></i>&nbsp;123 Street, Suite 123
-
-                        <i class="icon-home"></i>&nbsp;San Francisco, CA 94107
-
-                        <abbr title="Phone">
-                            <i class="icon-phone"></i>
-                        </abbr>&nbsp;(111) 111-1111
-                    </address> -->
-
-                    <!--form role="form" style="position:relative;z-index:9999;" method="POST" action="https://formspree.io/fknig001@odu.edu">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input type="text" name="name" class="form-control form-footer" placeholder="Your Name">
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" name="_subject" class="form-control form-footer" placeholder="Subject">
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="text" name="_replyto" class="form-control form-footer" placeholder="Email">
-                            </div>
-
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <textarea class="form-control form-footer" name="message" rows="5" placeholder="Message"></textarea>
-                            </div>
-
-                        </div>
-
-                        <br>
-                        <button type="submit" class="btn bg-black text-center">Submit</button>
-
-                    </form>
-                    <br>
-
-                </div>
-            </div>
-        </div>
-    </footer> -->
-
-    <div class="footer-below">
-        <div class="container-fluid">
-            <div class="row">
-                <div id="copyright" class="col-lg-12">
+                    <p id="copyright" class="footer-copyright"></p>
                     <script>
-                        today = new Date().getFullYear()
-                        fullCopyRight = "Copyright &copy, " + today + "\n"
-                        document.getElementById("copyright").innerHTML = fullCopyRight;
+                        document.getElementById("copyright").textContent =
+                            "Copyright \u00A9 " + new Date().getFullYear();
                     </script>
                 </div>
             </div>
         </div>
-    </div>
+    </footer>
     <!-- End of Footer -->
 
 
@@ -586,7 +496,6 @@
     <script src="js/horizBarChart.js"></script>
     <!-- portfolio filtered -->
     <script type="text/javascript" src="js/jquery.easing.min.js"></script>
-    <script type="text/javascript" src="js/jquery.mixitup.min.js"></script>
     <script type="text/javascript" src="js/jquery.swipebox.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
 
@@ -622,53 +531,7 @@
 
     <script type="text/javascript">
     $(function() {
-        //lightbox
         $('.swipebox').swipebox();
-        //filtered portfolio
-        var filterList = {
-            init: function() {
-                // MixItUp plugin
-                // http://mixitup.io
-                $('#portfoliolist').mixitup({
-                    targetSelector: '.portfolio',
-                    filterSelector: '.filter',
-                    effects: ['fade'],
-                    easing: 'snap',
-                    // call the hover effect
-                    onMixEnd: filterList.hoverEffect()
-                });
-
-            },
-
-            hoverEffect: function() {
-
-                // Simple parallax effect
-                $('#portfoliolist .portfolio').hover(
-                    function() {
-                        $(this).find('.label').stop().animate({
-                            bottom: 0
-                        }, 200, 'easeOutQuad');
-                        $(this).find('img').stop().animate({
-                            top: -30
-                        }, 500, 'easeOutQuad');
-                    },
-                    function() {
-                        $(this).find('.label').stop().animate({
-                            bottom: -40
-                        }, 200, 'easeInQuad');
-                        $(this).find('img').stop().animate({
-                            top: 0
-                        }, 300, 'easeOutQuad');
-                    }
-                );
-
-            }
-
-        };
-
-        // Run the show!
-        filterList.init();
-
     });
     </script>
 
