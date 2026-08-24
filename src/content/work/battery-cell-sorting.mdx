@@ -1,0 +1,67 @@
+---
+title: Real-time multi-camera vision for battery cell sorting
+category: Vision
+period: '2022 — 2023'
+summary: Inline vision that measures, reads and classifies every cell on a live production line, at line rate.
+tags: ['C++', 'GigE Vision', 'OpenCV', 'Multi-GPU', 'Laser triangulation', 'OCR']
+featured: true
+# Held back pending a confidentiality review of the Redwood Materials agreement.
+# Nothing here is built or published while this is true. To bring it back, tone
+# down the specifics below and flip this to false.
+draft: true
+order: 1
+---
+
+import BatterySorting from '../../components/diagrams/BatterySorting.astro'
+
+## Problem
+
+Cells arriving for recycling are not a uniform stream. They differ in format, in
+condition, and in what is printed on them — and the value of the downstream process
+depends on routing each one correctly. Doing that by hand does not scale, and doing it
+by sampling means accepting that some fraction of what goes downstream is wrong.
+
+The goal was to inspect **every** cell, inline, without becoming the slowest step on
+the line.
+
+## Constraints
+
+The constraints did more to shape this system than the algorithms did.
+
+- **Line rate is not negotiable.** Inspection had to complete inside the time budget the
+  line already had. A correct answer that arrives late is a stopped line.
+- **Cells are in motion.** Anything that assumes a static subject is unusable.
+- **The environment is a factory**, not a lab: vibration, ambient light that changes
+  across a shift, and dust on optics.
+- **Two different questions** — dimensional and visual — needed different sensing, and
+  both answers had to arrive for the same physical cell.
+
+## Approach
+
+<BatterySorting />
+
+**Volume by laser triangulation.** A projected laser line is imaged off-axis; the
+deflection of the line encodes height. Sweeping that across the moving cell yields a
+profile, and the profile yields volumetric measurement — without ever stopping the part.
+
+**Two camera cells, two jobs.** Six monochrome cameras handle OCR, where contrast
+matters more than color. Six RGB cameras handle classification, where it does not.
+Both cells run **pulsed lighting with short exposure**, which is the piece that makes
+imaging a moving part work at all: the strobe is brief enough that the cell is
+effectively frozen, and bright enough to overwhelm whatever the ambient light is doing
+that day.
+
+**Capture and compute.** I wrote the **C++ GigE drivers** handling frame capture and
+cross-camera synchronisation, feeding a rack-mounted multi-GPU compute module that ran
+inference for all twelve streams. Synchronisation is the subtle part — twelve cameras
+observing one moving object are only useful if you can say with confidence which frames
+belong to the same cell.
+
+## Outcome
+
+The system ran **inline on a live production line**, inspecting every cell rather than a
+sample, and emitting a sort decision back to line control inside the cycle budget.
+
+The lesson I keep from it: on a manufacturing line, the interesting engineering is
+rarely the model. It is synchronisation, lighting, and the discipline of making a
+system that degrades honestly when a camera drifts out of calibration at 3am.

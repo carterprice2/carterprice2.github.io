@@ -1,0 +1,191 @@
+---
+import Base from '../layouts/Base.astro'
+import { site } from '../data/site'
+---
+
+<Base title="Personal" description="Personal notes — goals and knee prehab.">
+  <div class="wrap">
+    <a class="back" href="/">← Home</a>
+
+    <main id="main">
+      <header class="page-header">
+        <h1>Personal</h1>
+        <nav class="section-nav mono" aria-label="On this page">
+          <a href="#goals">Goals</a>
+          <a href="#knee-prehab">Knee prehab</a>
+        </nav>
+      </header>
+
+      <section id="goals" class="paper">
+        <h2>Goals</h2>
+
+        <h3>Build websites</h3>
+        <ol>
+          <li>
+            <a
+              href="https://trello.com/b/NJ8R9rdE/swimming-times-and-visualization-website"
+              target="_blank"
+              rel="noopener noreferrer">Swimming visualization / prediction / race simulation</a
+            >
+          </li>
+          <li>Motor selection + DB (Django)</li>
+          <li>CV website — people tracking (React)</li>
+        </ol>
+
+        <h3>Learning</h3>
+        <ul>
+          <li>
+            <a href="https://www.udemy.com" target="_blank" rel="noopener noreferrer">
+              Web development course
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.udacity.com/course/computer-networking--ud436"
+              target="_blank"
+              rel="noopener noreferrer">Networking (ud436)</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.sparkfun.com/engineering_essentials"
+              target="_blank"
+              rel="noopener noreferrer">EE skills</a
+            >
+          </li>
+        </ul>
+
+        <h3>Robotics</h3>
+        <ol>
+          <li>
+            <a href="https://www.learncpp.com/" target="_blank" rel="noopener noreferrer">
+              C++
+            </a>
+          </li>
+          <li>ROS</li>
+        </ol>
+      </section>
+
+      <section id="knee-prehab" class="paper">
+        <h2>Knee prehab</h2>
+
+        <h3>Session</h3>
+        <ol>
+          <li>
+            Banded leg release — lay down with rollout tube under ankle — 2 × 1 min each
+            leg
+          </li>
+          <li>Internal hip rotation stretch — leg cross over — 3 × each leg, hold 30–45 s</li>
+          <li>
+            Check internal rotation — lay on back, bend knee and internally rotate. Don't
+            do runner's stretch until this improves.
+          </li>
+        </ol>
+        <p>
+          <a
+            href="https://www.youtube.com/watch?v=WAuPlk_2naI"
+            target="_blank"
+            rel="noopener noreferrer">Reference video</a
+          >
+        </p>
+      </section>
+
+      <footer class="foot mono">
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </footer>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .wrap {
+    max-width: 46rem;
+    margin-inline: auto;
+    padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  }
+
+  .back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    margin-bottom: var(--space-xl);
+  }
+
+  .page-header h1 {
+    font-size: var(--step-3);
+  }
+
+  .section-nav {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
+  }
+
+  .paper {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border);
+    scroll-margin-top: var(--space-lg);
+  }
+
+  h2 {
+    font-size: var(--step-2);
+  }
+
+  h3 {
+    font-size: var(--step-0);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-weight: 500;
+    margin-top: var(--space-lg);
+  }
+
+  ol,
+  ul {
+    margin-top: var(--space-sm);
+    display: grid;
+    gap: var(--space-xs);
+    counter-reset: item;
+  }
+
+  li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: var(--muted);
+  }
+
+  ol li {
+    counter-increment: item;
+  }
+
+  ol li::before {
+    content: counter(item);
+    position: absolute;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--faint);
+  }
+
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 6px;
+    height: 1px;
+    background: var(--border-strong);
+  }
+
+  p {
+    margin-top: var(--space-md);
+    color: var(--muted);
+  }
+
+  .foot {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+  }
+</style>

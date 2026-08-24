@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro'
+---
+
+<Base title="Not found" description="That page doesn't exist.">
+  <main id="main" class="wrap">
+    <p class="eyebrow">404</p>
+    <h1>That page doesn't exist.</h1>
+    <p class="body">
+      It may have moved in the rebuild, or it may never have existed. Either way:
+    </p>
+    <ul class="links mono">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#work">Selected work</a></li>
+      <li><a href="/resume/">Résumé</a></li>
+    </ul>
+  </main>
+</Base>
+
+<style>
+  .wrap {
+    max-width: 40rem;
+    margin-inline: auto;
+    padding: var(--space-2xl) var(--space-md);
+    min-height: 70svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  h1 {
+    font-size: var(--step-3);
+    margin-top: var(--space-sm);
+  }
+
+  .body {
+    color: var(--muted);
+    margin-top: var(--space-md);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+</style>

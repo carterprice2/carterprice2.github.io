@@ -1,0 +1,275 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../layouts/Base.astro'
+import Rail from '../components/Rail.astro'
+import Section from '../components/Section.astro'
+import WorkCard from '../components/WorkCard.astro'
+import ExperienceItem from '../components/ExperienceItem.astro'
+import { site } from '../data/site'
+import { experience, education } from '../data/experience'
+import { skills, skillsIntro } from '../data/skills'
+
+const work = (
+  await getCollection('work', ({ data }) => data.featured && !data.draft)
+).sort((a, b) => a.data.order - b.data.order)
+---
+
+<Base isHome>
+  <div class="shell">
+    <Rail />
+
+    <main id="main" class="content">
+      <Section id="about" title="About">
+        <div class="prose">
+          <p>
+            I started in mechanical engineering and ended up writing software, which
+            turned out to be the useful path: most of my career has been spent on
+            systems where code has to survive contact with physical reality — vision
+            rigs on live production lines, robots that have to be right about where
+            things are, test systems that gate whether a vehicle ships.
+          </p>
+          <p>
+            These days I build AI products end to end. At <strong>Inflight</strong> I'm
+            the first engineering hire, working across an LLM evaluation harness, agent
+            tooling, and the analytics that tell us what any of it costs. At{' '}
+            <a href="https://ycu.app" target="_blank" rel="noopener noreferrer">YCU</a>{' '}
+            I'm the sole engineer on a consumer app that's live on the App Store —
+            billing, content safety, releases, all of it.
+          </p>
+          <p>
+            The through-line is the same either way: own the whole system, understand the
+            constraint that actually binds, and ship the thing.
+          </p>
+          <p class="whereabouts">
+            Based in {site.location}. Outside work: mountain biking, skiing, and the
+            usual over-engineering of personal projects.
+          </p>
+        </div>
+      </Section>
+
+      <Section id="work" title="Selected work">
+        <ul class="work-list">
+          {
+            work.map((item) => (
+              <WorkCard
+                slug={item.id}
+                title={item.data.title}
+                category={item.data.category}
+                period={item.data.period}
+                summary={item.data.summary}
+                tags={item.data.tags}
+              />
+            ))
+          }
+        </ul>
+      </Section>
+
+      <Section id="experience" title="Experience">
+        <ul>
+          {experience.map((role) => <ExperienceItem role={role} />)}
+        </ul>
+
+        <h3 class="sub-heading">Education</h3>
+        <ul class="education">
+          {
+            education.map((e) => (
+              <li>
+                <p class="mono">{e.period}</p>
+                <div>
+                  <h4>{e.school}</h4>
+                  <p class="degree">{e.degree}</p>
+                  <p class="detail">{e.detail}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="resume-link">
+          <a href="/resume/">Full résumé →</a>
+        </p>
+      </Section>
+
+      <Section id="skills" title="Skills">
+        <p class="intro">{skillsIntro}</p>
+        <div class="clusters">
+          {
+            skills.map((cluster) => (
+              <div class="cluster">
+                <h3>{cluster.name}</h3>
+                <p>{cluster.items.join(' · ')}</p>
+              </div>
+            ))
+          }
+        </div>
+      </Section>
+
+      <Section id="contact" title="Contact">
+        <p class="intro">
+          Open to conversations about AI product work, perception and robotics, or
+          manufacturing systems — full-time or consulting.
+        </p>
+        <ul class="contact-list">
+          <li>
+            <span class="mono">Email</span>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <span class="mono">GitHub</span>
+            <a href={site.links.github} target="_blank" rel="noopener noreferrer">
+              github.com/carterprice2
+            </a>
+          </li>
+          <li>
+            <span class="mono">LinkedIn</span>
+            <a href={site.links.linkedin} target="_blank" rel="noopener noreferrer">
+              in/carter-price
+            </a>
+          </li>
+          <li>
+            <span class="mono">Résumé</span>
+            <span><a href="/resume/">Web</a> · <a href="/resume.pdf">PDF</a></span>
+          </li>
+        </ul>
+
+        <footer class="foot">
+          <p class="mono">
+            Built with Astro. Typeset in Inter and IBM Plex Mono. <a href="/personal/">
+              Personal
+            </a>
+          </p>
+        </footer>
+      </Section>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .shell {
+    max-width: 84rem;
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+  }
+
+  .content {
+    padding-block: var(--space-lg) var(--space-2xl);
+  }
+
+  .prose p + p {
+    margin-top: var(--space-md);
+  }
+
+  .prose,
+  .intro {
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  .prose strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .whereabouts {
+    color: var(--faint);
+  }
+
+  .work-list {
+    display: grid;
+    gap: var(--space-md);
+    /* Cancels the card's own padding so cards align with the other sections. */
+    margin-inline: calc(var(--space-md) * -1);
+  }
+
+  .sub-heading {
+    font-size: var(--step-1);
+    margin-top: var(--space-xl);
+  }
+
+  .education li {
+    display: grid;
+    gap: var(--space-xs) var(--space-lg);
+    padding-block: var(--space-md);
+    border-top: 1px solid var(--border);
+  }
+
+  .education h4 {
+    font-size: var(--step-0);
+  }
+
+  .education .degree {
+    color: var(--text);
+  }
+
+  .education .detail {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  .resume-link {
+    margin-top: var(--space-lg);
+  }
+
+  .clusters {
+    display: grid;
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+  }
+
+  .cluster h3 {
+    font-size: var(--step-0);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+
+  .cluster p {
+    color: var(--muted);
+    margin-top: var(--space-xs);
+    max-width: var(--measure);
+  }
+
+  .contact-list {
+    display: grid;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
+  .contact-list li {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: var(--space-md);
+    align-items: baseline;
+  }
+
+  .foot {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--border);
+  }
+
+  @media (min-width: 40rem) {
+    .education li {
+      grid-template-columns: 9rem 1fr;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .clusters {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .shell {
+      display: grid;
+      grid-template-columns: var(--rail-width) 1fr;
+      gap: var(--space-2xl);
+      padding-inline: var(--space-lg);
+    }
+
+    .content {
+      padding-block: var(--space-2xl);
+    }
+  }
+</style>

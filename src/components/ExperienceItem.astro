@@ -1,0 +1,148 @@
+---
+import type { Role } from '../data/experience'
+import TagList from './TagList.astro'
+
+interface Props {
+  role: Role
+}
+
+const { role } = Astro.props
+const heading = role.role ? `${role.role} · ${role.company}` : role.company
+---
+
+<li class="item">
+  <p class="mono period">{role.period}</p>
+
+  <div>
+    <h3>
+      {
+        role.url ? (
+          <a href={role.url} target="_blank" rel="noopener noreferrer">
+            {heading}
+          </a>
+        ) : (
+          heading
+        )
+      }
+    </h3>
+
+    <p class="meta">
+      {role.note && <span class="note">{role.note}</span>}
+      {role.note && role.location && <span aria-hidden="true"> · </span>}
+      {role.location}
+    </p>
+
+    {
+      role.bullets && (
+        <ul class="bullets">
+          {role.bullets.map((b) => (
+            <li>{b}</li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      role.subRoles?.map((sub) => (
+        <div class="sub">
+          <h4>
+            {sub.role} <span class="mono sub-period">{sub.period}</span>
+          </h4>
+          <ul class="bullets">
+            {sub.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+
+    <TagList tags={role.tags} label={`Technologies used at ${role.company}`} />
+  </div>
+</li>
+
+<style>
+  .item {
+    display: grid;
+    gap: var(--space-xs) var(--space-lg);
+    padding-block: var(--space-lg);
+    border-top: 1px solid var(--border);
+  }
+
+  .item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .period {
+    padding-top: 0.3rem;
+    white-space: nowrap;
+  }
+
+  h3 {
+    font-size: var(--step-1);
+  }
+
+  h3 a {
+    color: inherit;
+  }
+
+  h3 a:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .meta {
+    color: var(--muted);
+    font-size: var(--step--1);
+    margin-top: 0.15rem;
+  }
+
+  .note {
+    color: var(--accent);
+  }
+
+  .bullets {
+    margin-top: var(--space-sm);
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .bullets li {
+    position: relative;
+    padding-left: 1.1rem;
+    color: var(--muted);
+    max-width: var(--measure);
+  }
+
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 5px;
+    height: 1px;
+    background: var(--border-strong);
+  }
+
+  .sub {
+    margin-top: var(--space-md);
+  }
+
+  .sub h4 {
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
+  .sub-period {
+    font-weight: 400;
+    margin-left: var(--space-xs);
+  }
+
+  /* Date gutter only once there's room for it; stacked on narrow screens. */
+  @media (min-width: 40rem) {
+    .item {
+      grid-template-columns: 9rem 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,159 @@
+---
+import { site, navSections } from '../data/site'
+import SocialLinks from './SocialLinks.astro'
+---
+
+<header class="rail">
+  <div class="rail-inner">
+    <div>
+      <h1 class="rail-name">{site.name}</h1>
+      <p class="rail-role">{site.role}</p>
+      <p class="rail-thesis">{site.thesis}</p>
+    </div>
+
+    <nav class="rail-nav" aria-label="Sections">
+      <ul>
+        {
+          navSections.map(({ id, label }) => (
+            <li>
+              <a href={`#${id}`} data-spy-link={id}>
+                <span class="rail-indicator" aria-hidden="true" />
+                <span class="rail-label">{label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <SocialLinks />
+  </div>
+</header>
+
+<style>
+  .rail {
+    padding-block: var(--space-xl);
+  }
+
+  .rail-name {
+    font-size: var(--step-4);
+  }
+
+  .rail-role {
+    font-size: var(--step-1);
+    color: var(--text);
+    margin-top: var(--space-xs);
+  }
+
+  .rail-thesis {
+    color: var(--muted);
+    margin-top: var(--space-md);
+    max-width: 34ch;
+  }
+
+  /* The nav is decorative wayfinding on mobile, where sections are simply
+     stacked and scrolled past — so it's hidden below the two-column breakpoint. */
+  .rail-nav {
+    display: none;
+  }
+
+  .rail-nav a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding-block: 0.6rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .rail-indicator {
+    width: 2rem;
+    height: 1px;
+    background: var(--border-strong);
+    transition:
+      width 0.25s var(--ease),
+      background-color 0.25s var(--ease);
+  }
+
+  .rail-nav a:hover,
+  .rail-nav a:focus-visible,
+  .rail-nav a[aria-current='true'] {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .rail-nav a:hover .rail-indicator,
+  .rail-nav a:focus-visible .rail-indicator,
+  .rail-nav a[aria-current='true'] .rail-indicator {
+    width: 4rem;
+    background: var(--accent);
+  }
+
+  @media (min-width: 60rem) {
+    .rail {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      display: flex;
+      align-items: center;
+      padding-block: var(--space-2xl);
+    }
+
+    .rail-inner {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+      width: 100%;
+    }
+
+    .rail-nav {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+  const links = new Map<string, HTMLAnchorElement>()
+  document.querySelectorAll<HTMLAnchorElement>('[data-spy-link]').forEach((a) => {
+    links.set(a.dataset.spyLink!, a)
+  })
+
+  const sections = [...links.keys()]
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null)
+
+  if (sections.length && 'IntersectionObserver' in window) {
+    // Track ratios rather than reacting to each crossing: with several sections
+    // on screen at once, "most visible wins" is stable where "last to enter" is not.
+    const ratios = new Map<string, number>()
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          ratios.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0)
+        }
+
+        let activeId: string | null = null
+        let best = 0
+        for (const [id, ratio] of ratios) {
+          if (ratio > best) {
+            best = ratio
+            activeId = id
+          }
+        }
+
+        for (const [id, link] of links) {
+          if (id === activeId) link.setAttribute('aria-current', 'true')
+          else link.removeAttribute('aria-current')
+        }
+      },
+      { threshold: [0, 0.15, 0.35, 0.6, 0.85, 1] },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+  }
+</script>

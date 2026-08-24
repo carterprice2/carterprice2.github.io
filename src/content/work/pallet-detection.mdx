@@ -1,0 +1,53 @@
+---
+title: Autonomous forklift pallet detection and pose estimation
+category: Robotics
+period: '2019'
+summary: A zero-to-one perception pipeline — self-collected data through to the 6-DoF pose a trajectory planner can actually use.
+tags: ['Python', 'PyTorch', 'ResNet', 'RGB-D', 'ROS', 'Object detection']
+featured: true
+order: 2
+---
+
+import PalletDetection from '../../components/diagrams/PalletDetection.astro'
+
+## Problem
+
+An autonomous forklift has to find a pallet, and then it has to know how that pallet is
+*oriented*. Those are different problems, and the second one is the one that matters:
+you cannot drive forks into pockets you can only locate in two dimensions.
+
+## Constraints
+
+- **No dataset existed.** Not a public one, and not an internal one. Whatever the model
+  learned, I had to go collect first.
+- **A bounding box is not a pose.** The output had to be something a trajectory planner
+  could consume, which meant position and yaw in the vehicle frame — not pixels.
+- **Real warehouse conditions**: pallets partially occluded by load, varying lighting,
+  and the wide range of condition that wooden pallets in active service actually exhibit.
+
+## Approach
+
+<PalletDetection />
+
+**Collect the data yourself.** I instrumented manual forklift operation and gathered
+imagery from the vehicle's own point of view, during normal warehouse work. This matters
+more than it sounds: the training distribution ends up matching the deployment
+distribution by construction, because they are the same camera doing the same job.
+
+**Train a detector from scratch.** A ResNet-backbone detector, trained on that corpus,
+locating the pallet and its fork pockets in RGB.
+
+**Lift 2D to 3D.** The step that turns a detection into something useful: index the
+predicted bounding box into the **registered depth frame**. Because RGB and depth are
+aligned, the box selects exactly the depth pixels belonging to the pallet face, and the
+geometry of that patch gives position and yaw. That pose is what feeds trajectory
+planning for the approach and fork insertion.
+
+## Outcome
+
+A **full zero-to-one build** — data collection, training, runtime pipeline, and
+integration into the vehicle's planning stack.
+
+What I took from it is that the cheapest large gain was in data collection strategy,
+not architecture. Collecting from the deployed viewpoint removed a whole category of
+domain-gap problems that no amount of model tuning would have fixed as cleanly.

@@ -1,0 +1,92 @@
+---
+import '../../styles/diagram.css'
+import ArrowDefs from './ArrowDefs.astro'
+
+interface Props {
+  caption?: string
+}
+
+const {
+  caption = 'Two subsystems carry most of the risk: entitlements must resolve identically whether a subscription came from Stripe or Apple, and every piece of user-generated content is classified before it can reach another user.',
+} = Astro.props
+---
+
+<figure>
+  <svg
+    class="diagram"
+    viewBox="0 0 820 330"
+    role="img"
+    aria-label="Architecture diagram: an Expo React Native app for iOS and Android and a Next.js web app share a Turborepo monorepo and talk to Supabase. Billing arrives from either Stripe or Apple in-app purchase and is normalised into a single entitlement record. User-generated content passes an LLM safety classifier which either publishes it or routes it to an admin moderation queue."
+  >
+    <ArrowDefs />
+
+    <!-- Clients -->
+    <rect class="d-group" x="16" y="30" width="196" height="160"></rect>
+    <text class="d-group-label" x="26" y="48">Clients · Turborepo</text>
+
+    <rect class="d-box" x="32" y="64" width="164" height="46"></rect>
+    <text class="d-label" x="114" y="83" text-anchor="middle">Expo / React Native</text>
+    <text class="d-sub" x="114" y="98" text-anchor="middle">iOS · Android</text>
+
+    <rect class="d-box" x="32" y="126" width="164" height="46"></rect>
+    <text class="d-label" x="114" y="145" text-anchor="middle">Next.js 16</text>
+    <text class="d-sub" x="114" y="160" text-anchor="middle">web</text>
+
+    <!-- Platform -->
+    <rect class="d-box" x="262" y="90" width="120" height="56"></rect>
+    <text class="d-label" x="322" y="112" text-anchor="middle">Supabase</text>
+    <text class="d-sub" x="322" y="127" text-anchor="middle">Postgres · RLS</text>
+    <text class="d-sub" x="322" y="140" text-anchor="middle">auth · storage</text>
+
+    <!-- Billing -->
+    <rect class="d-group" x="430" y="20" width="374" height="130"></rect>
+    <text class="d-group-label" x="440" y="38">Billing</text>
+
+    <rect class="d-box" x="448" y="52" width="104" height="40"></rect>
+    <text class="d-label" x="500" y="76" text-anchor="middle">Stripe</text>
+
+    <rect class="d-box" x="448" y="104" width="104" height="34"></rect>
+    <text class="d-label" x="500" y="125" text-anchor="middle">Apple IAP</text>
+
+    <rect class="d-box d-box-accent" x="596" y="56" width="128" height="72"></rect>
+    <text class="d-label" x="660" y="80" text-anchor="middle">Entitlements</text>
+    <text class="d-sub" x="660" y="95" text-anchor="middle">one resolved state</text>
+    <text class="d-sub" x="660" y="108" text-anchor="middle">trials · partner codes</text>
+    <text class="d-sub" x="660" y="121" text-anchor="middle">webhook reconciled</text>
+
+    <!-- Safety -->
+    <rect class="d-group" x="430" y="176" width="374" height="134"></rect>
+    <text class="d-group-label" x="440" y="194">Content safety</text>
+
+    <rect class="d-box" x="448" y="208" width="110" height="52"></rect>
+    <text class="d-label" x="503" y="230" text-anchor="middle">UGC</text>
+    <text class="d-sub" x="503" y="245" text-anchor="middle">chat · comments</text>
+
+    <rect class="d-box d-box-accent" x="588" y="208" width="112" height="52"></rect>
+    <text class="d-label" x="644" y="230" text-anchor="middle">LLM classifier</text>
+    <text class="d-sub" x="644" y="245" text-anchor="middle">pre-publish</text>
+
+    <rect class="d-box" x="726" y="184" width="70" height="40"></rect>
+    <text class="d-sub" x="761" y="208" text-anchor="middle">publish</text>
+
+    <rect class="d-box" x="726" y="244" width="70" height="46"></rect>
+    <text class="d-sub" x="761" y="264" text-anchor="middle">moderation</text>
+    <text class="d-sub" x="761" y="277" text-anchor="middle">queue</text>
+
+    <!-- Flows -->
+    <g color="var(--border-strong)">
+      <path class="d-flow" d="M196 87 L240 87 L240 114 L258 114"></path>
+      <path class="d-flow" d="M196 149 L240 149 L240 122 L258 122"></path>
+      <path class="d-flow" d="M552 72 L592 82"></path>
+      <path class="d-flow" d="M552 121 L592 111"></path>
+      <path class="d-flow" d="M382 110 L426 92"></path>
+      <path class="d-flow" d="M382 126 L426 230"></path>
+      <path class="d-flow" d="M558 234 L584 234"></path>
+      <path class="d-flow" d="M700 226 L714 214"></path>
+    </g>
+    <g color="var(--accent)">
+      <path class="d-flow d-flow-accent" d="M700 242 L714 258"></path>
+    </g>
+  </svg>
+  <figcaption>{caption}</figcaption>
+</figure>
