@@ -1,8 +1,8 @@
 # carterprice.dev
 
-Personal site and portfolio for Carter Price. Astro 7, static, deployed to GitHub Pages.
+Personal site and portfolio for Carter Price. Astro 7, static, on Cloudflare Pages.
 
-Live: https://carterprice2.github.io/ (moving to https://carterprice.dev)
+Live: <https://carterprice.dev> · mirror: <https://carterprice2.github.io>
 
 ## Develop
 
@@ -59,42 +59,53 @@ pnpm resume:pdf    # public/resume.pdf — after editing experience.ts
 
 ## Deploy
 
-Pushing to `master` triggers `.github/workflows/deploy.yml`.
+**`carterprice.dev` on Cloudflare Pages is canonical.** Cloudflare builds from
+`master` on push via its GitHub integration.
 
-**One-time repo setting:** GitHub → Settings → Pages → **Source: GitHub Actions**.
-The repo previously served the `master` branch directly; until this is switched, the
-workflow builds but never publishes.
+Project settings in the Cloudflare dashboard:
 
-## Domain cutover (not done yet)
+| Setting | Value |
+|---|---|
+| Framework preset | Astro (or None) |
+| Build command | `pnpm build` |
+| Build output directory | `dist` |
+| Node version | from `.node-version` (22.12.0) |
+| Package manager | from `packageManager` in package.json (pnpm 10.13.1) |
 
-1. Register `carterprice.dev`.
-2. DNS at the registrar:
-   - `A` records for the apex `@` → `185.199.108.153`, `185.199.109.153`,
-     `185.199.110.153`, `185.199.111.153`
-   - `AAAA` records for `@` → `2606:50c0:8000::153`, `2606:50c0:8001::153`,
-     `2606:50c0:8002::153`, `2606:50c0:8003::153`
-   - `CNAME` for `www` → `carterprice2.github.io.`
-3. Create `public/CNAME` containing exactly `carterprice.dev`.
-4. In `astro.config.mjs`, change the `site` default to `https://carterprice.dev`.
-5. Push. Then GitHub → Settings → Pages → tick **Enforce HTTPS** once the certificate
-   is issued (can take a few minutes).
-6. Re-run `pnpm og` so the card's URL line is accurate, and re-check
-   `/sitemap-index.xml` and `/robots.txt` point at the new host.
+`carterprice2.github.io` still builds from the same source via
+`.github/workflows/deploy.yml`, kept as a mirror so old inbound links keep working.
+Because `site` in `astro.config.mjs` is `https://carterprice.dev`, every page the
+mirror serves carries a canonical pointing at the real domain — so the two do not
+compete in search results.
 
-Do steps 3 and 4 in the same commit. Adding `CNAME` before DNS resolves makes the site
-unreachable, and pointing `site` at a domain that doesn't answer breaks canonicals and
-OG tags.
+Why Cloudflare rather than GitHub Pages: response headers. GitHub Pages cannot set
+them at any price, which rules out CSP, `Referrer-Policy` and friends. Cloudflare
+also gives real 301s instead of meta-refresh, and a preview deployment per PR.
+
+### Cloudflare-specific files
+
+- **`public/_headers`** — security headers plus long-lived caching for `/_astro/*`.
+- **`public/_redirects`** — 301s for legacy `.html` URLs.
+
+Both are ignored by GitHub Pages, so the mirror simply serves without them. **A static
+file always beats a `_redirects` rule**, which is why the old meta-refresh stubs
+(`public/goals.html` etc.) were deleted rather than kept alongside.
 
 ## Legacy URLs
 
-Old `.html` URLs are preserved as real files in `public/` (not Astro's `redirects`
-option, which emits `/goals.html/index.html` and depends on the host doing
-directory-index lookup on a file-shaped path):
+Handled by `public/_redirects` as 301s on `carterprice.dev`:
 
 - `/goals.html` → `/personal/#goals`
 - `/KneePrehab.html` → `/personal/#knee-prehab`
-- `/work/{slug}.html` → `/work/{slug}/`
-- `/BRtrackrecords.html` — kept as-is, served verbatim
+- `/work/ycu.html`, `/work/pallet-detection.html` → `/work/{slug}/`
+- `/BRtrackrecords.html` — a real page, served verbatim at its original URL
+
+`/work/battery-cell-sorting.html` is deliberately **not** redirected — that case study
+is held back (see `draft` in its frontmatter) and should 404.
+
+These 301s only exist on Cloudflare. On the `carterprice2.github.io` mirror those four
+legacy paths 404, which is an accepted trade: proper 301s on the canonical domain are
+worth more than meta-refresh on a mirror that is expected to be retired.
 
 ## Agentation (dev review toolbar)
 

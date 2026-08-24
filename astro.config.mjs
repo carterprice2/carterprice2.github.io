@@ -8,12 +8,11 @@ import react from '@astrojs/react'
 // `site` drives canonical URLs, OG tags, sitemap and RSS.
 // No `base`: this is a GitHub *user* site served from the domain root.
 //
-// DOMAIN CUTOVER: this stays on the github.io URL until carterprice.dev is
-// registered and its DNS resolves. Pointing canonicals and OG tags at a domain
-// that doesn't answer is worse than not having the domain. At cutover, change
-// this default to 'https://carterprice.dev' and add public/CNAME in the same
-// commit — see README.
-const site = process.env.SITE_URL ?? 'https://carterprice2.github.io'
+// carterprice.dev is the canonical home, served by Cloudflare Pages.
+// carterprice2.github.io still builds from the same source as a mirror, and
+// because canonical/OG URLs are generated from this value, the mirror points
+// search engines at the real domain rather than competing with it.
+const site = process.env.SITE_URL ?? 'https://carterprice.dev'
 
 // The config module runs inside the Astro CLI process, so argv tells us which
 // command is running. `astro dev` gets the React integration; `astro build`

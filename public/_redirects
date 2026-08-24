@@ -1,0 +1,14 @@
+# Cloudflare Pages redirects — real 301s, replacing the meta-refresh HTML stubs
+# the GitHub Pages build had to use.
+#
+# NOTE: a static file always wins over a rule here, so the old
+# public/goals.html etc. had to be deleted for these to fire.
+#
+# /work/battery-cell-sorting.html is deliberately absent: that case study is
+# held back pending confidentiality review, and should 404 rather than
+# redirect anywhere.
+
+/goals.html                   /personal/#goals             301
+/KneePrehab.html              /personal/#knee-prehab       301
+/work/ycu.html                /work/ycu/                   301
+/work/pallet-detection.html   /work/pallet-detection/      301
