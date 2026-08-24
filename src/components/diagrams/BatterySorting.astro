@@ -1,0 +1,95 @@
+---
+import '../../styles/diagram.css'
+import ArrowDefs from './ArrowDefs.astro'
+
+interface Props {
+  caption?: string
+}
+
+const {
+  caption = 'Two inspection cells inspect every cell inline at line rate: laser triangulation for volume, then mono cameras for OCR and RGB for classification, fused into one sort decision.',
+} = Astro.props
+---
+
+<figure>
+  <svg
+    class="diagram"
+    viewBox="0 0 820 300"
+    role="img"
+    aria-label="System diagram: cells enter on a conveyor, pass a laser triangulation station that measures volume, then two camera cells — six monochrome cameras for OCR and six RGB cameras for classification — with C plus plus GigE drivers feeding a rack-mounted multi-GPU compute module that emits a sort decision back to the line."
+  >
+    <ArrowDefs />
+
+    <!-- Conveyor -->
+    <text class="d-group-label" x="16" y="24">Production line</text>
+    <!-- Stops at the vision station: past that point the diagram is data flow,
+         not physical transport, and a full-width rule reads as a stray line. -->
+    <line x1="16" y1="150" x2="330" y2="150" stroke="var(--border)" stroke-width="1"></line>
+
+    <rect class="d-box" x="16" y="120" width="86" height="46"></rect>
+    <text class="d-label" x="59" y="140" text-anchor="middle">Cell in</text>
+    <text class="d-sub" x="59" y="155" text-anchor="middle">conveyor</text>
+
+    <!-- Laser triangulation -->
+    <rect class="d-group" x="130" y="52" width="150" height="196"></rect>
+    <text class="d-group-label" x="140" y="70">Station 1 · metrology</text>
+
+    <rect class="d-box" x="146" y="82" width="118" height="42"></rect>
+    <text class="d-label" x="205" y="100" text-anchor="middle">Laser line</text>
+    <text class="d-sub" x="205" y="114" text-anchor="middle">projector</text>
+
+    <!-- laser fan onto the part -->
+    <path class="d-laser" d="M175 124 L196 150"></path>
+    <path class="d-laser" d="M235 124 L214 150"></path>
+
+    <rect class="d-box d-box-accent" x="146" y="176" width="118" height="52"></rect>
+    <text class="d-label" x="205" y="196" text-anchor="middle">Triangulation</text>
+    <text class="d-sub" x="205" y="211" text-anchor="middle">volumetric measure</text>
+
+    <!-- Vision cells -->
+    <rect class="d-group" x="308" y="30" width="180" height="240"></rect>
+    <text class="d-group-label" x="318" y="48">Station 2 · vision</text>
+
+    <rect class="d-box" x="324" y="62" width="148" height="60"></rect>
+    <text class="d-label" x="398" y="84" text-anchor="middle">6 × mono</text>
+    <text class="d-sub" x="398" y="99" text-anchor="middle">OCR · date + lot code</text>
+    <text class="d-sub" x="398" y="113" text-anchor="middle">pulsed strobe</text>
+
+    <rect class="d-box" x="324" y="178" width="148" height="60"></rect>
+    <text class="d-label" x="398" y="200" text-anchor="middle">6 × RGB</text>
+    <text class="d-sub" x="398" y="215" text-anchor="middle">classification</text>
+    <text class="d-sub" x="398" y="229" text-anchor="middle">short exposure</text>
+
+    <!-- Compute -->
+    <rect class="d-box" x="530" y="62" width="134" height="60"></rect>
+    <text class="d-label" x="597" y="84" text-anchor="middle">GigE drivers</text>
+    <text class="d-sub" x="597" y="99" text-anchor="middle">C++ · frame capture</text>
+    <text class="d-sub" x="597" y="113" text-anchor="middle">+ sync</text>
+
+    <rect class="d-box d-box-accent" x="530" y="178" width="134" height="60"></rect>
+    <text class="d-label" x="597" y="200" text-anchor="middle">Multi-GPU</text>
+    <text class="d-sub" x="597" y="215" text-anchor="middle">rack-mounted</text>
+    <text class="d-sub" x="597" y="229" text-anchor="middle">inference</text>
+
+    <rect class="d-box" x="704" y="120" width="100" height="60"></rect>
+    <text class="d-label" x="754" y="142" text-anchor="middle">Sort</text>
+    <text class="d-sub" x="754" y="157" text-anchor="middle">accept / divert</text>
+    <text class="d-sub" x="754" y="171" text-anchor="middle">&lt; line rate</text>
+
+    <!-- Flows -->
+    <g color="var(--border-strong)">
+      <path class="d-flow" d="M102 143 L142 143"></path>
+      <path class="d-flow" d="M264 202 L320 202 L320 122"></path>
+      <path class="d-flow" d="M264 202 L320 202 L320 178"></path>
+      <path class="d-flow" d="M472 92 L526 92"></path>
+      <path class="d-flow" d="M472 208 L526 208"></path>
+      <path class="d-flow" d="M597 122 L597 174"></path>
+    </g>
+    <g color="var(--accent)">
+      <path class="d-flow d-flow-accent" d="M664 208 L690 208 L690 150 L700 150"></path>
+      <path class="d-flow d-flow-accent" d="M754 180 L754 262 L59 262 L59 170"></path>
+    </g>
+    <text class="d-sub" x="400" y="278" text-anchor="middle">feedback to line control</text>
+  </svg>
+  <figcaption>{caption}</figcaption>
+</figure>

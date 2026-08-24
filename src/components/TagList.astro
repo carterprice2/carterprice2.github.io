@@ -1,0 +1,39 @@
+---
+interface Props {
+  tags: readonly string[]
+  /** Accessible name for the list, e.g. "Technologies used at Tesla". */
+  label?: string
+}
+
+const { tags, label } = Astro.props
+---
+
+{
+  tags.length > 0 && (
+    <ul class="tags" aria-label={label}>
+      {tags.map((tag) => (
+        <li>{tag}</li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+  }
+
+  .tags li {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    line-height: 1.4;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: var(--accent-wash);
+    color: var(--accent);
+    white-space: nowrap;
+  }
+</style>

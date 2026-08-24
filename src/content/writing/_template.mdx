@@ -1,0 +1,22 @@
+---
+title: Post template
+date: 2026-01-01
+description: Copy this file, rename it to a URL slug, set draft to false, and write.
+draft: true
+---
+
+Files prefixed with `_` are ignored by the content loader, so this template never
+ships. To publish a post: copy it to `src/content/writing/some-slug.mdx`, set
+`draft: false`, and it appears at `/writing/some-slug/` and in the RSS feed.
+
+The `Writing` link stays out of the homepage navigation until there is at least one
+real post — an empty writing section reads worse than no writing section. Uncomment
+the entry in `src/data/site.ts` when you publish the first one.
+
+## A heading
+
+Body copy, **bold**, `inline code`, and links all pick up the site styles.
+
+```ts
+const example = 'fenced code blocks are styled too'
+```

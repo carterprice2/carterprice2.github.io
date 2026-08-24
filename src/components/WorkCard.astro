@@ -1,0 +1,113 @@
+---
+import TagList from './TagList.astro'
+import { diagrams, type DiagramSlug } from './diagrams/registry'
+
+interface Props {
+  slug: string
+  title: string
+  category: string
+  period: string
+  summary: string
+  tags: string[]
+}
+
+const { slug, title, category, period, summary, tags } = Astro.props
+const Diagram = diagrams[slug as DiagramSlug]
+---
+
+<li class="card">
+  <a class="card-link" href={`/work/${slug}/`}>
+    <span class="sr-only">{title}</span>
+  </a>
+
+  {
+    Diagram && (
+      <div class="card-figure" aria-hidden="true">
+        <Diagram caption="" />
+      </div>
+    )
+  }
+
+  <div class="card-body">
+    <p class="mono">{category} · {period}</p>
+    <h3>{title}</h3>
+    <p class="summary">{summary}</p>
+    <TagList tags={tags} label={`Technologies used on ${title}`} />
+  </div>
+</li>
+
+<style>
+  .card {
+    position: relative;
+    display: grid;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    transition:
+      background-color 0.2s var(--ease),
+      border-color 0.2s var(--ease);
+  }
+
+  .card:hover,
+  .card:focus-within {
+    background: var(--surface);
+    border-color: var(--border);
+  }
+
+  /* Whole-card hit area, but the heading remains the accessible name and the
+     only thing in the tab order — so tags and prose stay selectable. */
+  .card-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: var(--radius);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .card-figure :global(figure) {
+    margin: 0;
+  }
+
+  .card-figure :global(.diagram) {
+    /* Thumbnail duty: the diagram is legible detail on the case page,
+       texture-and-shape here. */
+    opacity: 0.75;
+    transition: opacity 0.2s var(--ease);
+  }
+
+  .card:hover .card-figure :global(.diagram) {
+    opacity: 1;
+  }
+
+  h3 {
+    font-size: var(--step-1);
+    margin-top: 0.15rem;
+  }
+
+  .card:hover h3,
+  .card:focus-within h3 {
+    color: var(--accent);
+  }
+
+  .summary {
+    color: var(--muted);
+    margin-top: var(--space-xs);
+    max-width: var(--measure);
+  }
+
+  @media (min-width: 48rem) {
+    .card {
+      grid-template-columns: 15rem 1fr;
+      align-items: start;
+    }
+  }
+</style>

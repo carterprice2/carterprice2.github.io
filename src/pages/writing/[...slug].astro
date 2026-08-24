@@ -1,0 +1,127 @@
+---
+import { getCollection, render } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) => !data.draft)
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }))
+}
+
+const { post } = Astro.props
+const { Content } = await render(post)
+
+const formatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  timeZone: 'UTC',
+})
+---
+
+<Base title={post.data.title} description={post.data.description}>
+  <div class="wrap">
+    <a class="back" href="/writing/">← Writing</a>
+
+    <main id="main">
+      <article>
+        <header>
+          <p class="mono">
+            <time datetime={post.data.date.toISOString()}>
+              {formatter.format(post.data.date)}
+            </time>
+          </p>
+          <h1>{post.data.title}</h1>
+        </header>
+        <div class="prose">
+          <Content />
+        </div>
+      </article>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .wrap {
+    max-width: 46rem;
+    margin-inline: auto;
+    padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  }
+
+  .back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    margin-bottom: var(--space-xl);
+  }
+
+  h1 {
+    font-size: var(--step-3);
+    margin-top: var(--space-xs);
+  }
+
+  .prose {
+    margin-top: var(--space-xl);
+  }
+
+  .prose :global(h2) {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+  }
+
+  .prose :global(h3) {
+    font-size: var(--step-1);
+    margin-top: var(--space-lg);
+  }
+
+  .prose :global(p) {
+    color: var(--muted);
+    margin-top: var(--space-md);
+  }
+
+  .prose :global(strong) {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-top: var(--space-md);
+    display: grid;
+    gap: var(--space-sm);
+    padding-left: 1.25rem;
+    list-style: revert;
+  }
+
+  .prose :global(li) {
+    color: var(--muted);
+  }
+
+  .prose :global(pre) {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: var(--step--1);
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+  }
+
+  .prose :global(:not(pre) > code) {
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  .prose :global(blockquote) {
+    margin-top: var(--space-md);
+    padding-left: var(--space-md);
+    border-left: 2px solid var(--accent);
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,314 @@
+---
+import Base from '../layouts/Base.astro'
+import { site } from '../data/site'
+import { experience, education } from '../data/experience'
+import { skills } from '../data/skills'
+---
+
+<Base
+  title="Résumé"
+  description={`Résumé for ${site.name} — ${site.role}, ${site.location}.`}
+>
+  <div class="wrap">
+    <a class="back no-print" href="/">← Home</a>
+
+    <main id="main">
+      <header class="head">
+        <div>
+          <h1>{site.name}</h1>
+          <p class="role">{site.role}</p>
+        </div>
+        <ul class="contact mono">
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li>{site.location}</li>
+          <li><a href={site.links.github}>github.com/carterprice2</a></li>
+          <li><a href={site.links.linkedin}>in/carter-price</a></li>
+        </ul>
+      </header>
+
+      <p class="no-print hint">
+        <a href="/resume.pdf">Download as PDF</a> — or print this page (⌘P); the layout
+        and page breaks are already set up for it.
+      </p>
+
+      <section>
+        <h2>Experience</h2>
+        {
+          experience.map((role) => (
+            <article class="entry">
+              <div class="entry-head">
+                <h3>
+                  {role.role ? `${role.role} · ` : ''}
+                  {role.company}
+                  {role.note && <span class="note"> ({role.note})</span>}
+                </h3>
+                <p class="mono nowrap">{role.period}</p>
+              </div>
+              {role.location && <p class="loc">{role.location}</p>}
+
+              {role.bullets && (
+                <ul>
+                  {role.bullets.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              )}
+
+              {role.subRoles?.map((sub) => (
+                <div class="sub">
+                  <p class="sub-head">
+                    <strong>{sub.role}</strong>
+                    <span class="mono"> {sub.period}</span>
+                  </p>
+                  <ul>
+                    {sub.bullets.map((b) => (
+                      <li>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </article>
+          ))
+        }
+      </section>
+
+      <section>
+        <h2>Education</h2>
+        {
+          education.map((e) => (
+            <article class="entry">
+              <div class="entry-head">
+                <h3>{e.school}</h3>
+                <p class="mono nowrap">{e.period}</p>
+              </div>
+              <p class="loc">
+                {e.degree} — {e.detail}
+              </p>
+            </article>
+          ))
+        }
+      </section>
+
+      <section>
+        <h2>Skills</h2>
+        <dl class="skills">
+          {
+            skills.map((cluster) => (
+              <div class="skill-row">
+                <dt>{cluster.name}</dt>
+                <dd>{cluster.items.join(' · ')}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+    </main>
+  </div>
+</Base>
+
+<style>
+  .wrap {
+    max-width: 52rem;
+    margin-inline: auto;
+    padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  }
+
+  .back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border);
+  }
+
+  h1 {
+    font-size: var(--step-3);
+  }
+
+  .role {
+    color: var(--muted);
+  }
+
+  .contact li {
+    text-align: right;
+  }
+
+  .hint {
+    color: var(--faint);
+    font-size: var(--step--1);
+    margin-top: var(--space-md);
+  }
+
+  h2 {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: var(--space-xl);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .entry {
+    margin-top: var(--space-lg);
+  }
+
+  .entry-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  h3 {
+    font-size: var(--step-0);
+  }
+
+  .note {
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .loc {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  ul {
+    margin-top: var(--space-xs);
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  li {
+    position: relative;
+    padding-left: 1.1rem;
+    color: var(--muted);
+  }
+
+  li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 5px;
+    height: 1px;
+    background: var(--border-strong);
+  }
+
+  .sub {
+    margin-top: var(--space-sm);
+  }
+
+  .sub-head strong {
+    font-weight: 600;
+  }
+
+  .skills {
+    margin-top: var(--space-md);
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .skill-row {
+    display: grid;
+    gap: 0.15rem var(--space-md);
+    break-inside: avoid;
+  }
+
+  dt {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--text);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  @media (min-width: 40rem) {
+    .skill-row {
+      grid-template-columns: 12rem 1fr;
+    }
+  }
+
+  /* ---------- Print ----------
+     Invert to ink-on-paper: the dark palette is a screen decision, and printing
+     it would burn a cartridge to produce a worse document. */
+  @media print {
+    :global(:root) {
+      --bg: #fff;
+      --surface: #fff;
+      --text: #111;
+      --muted: #333;
+      --faint: #666;
+      --border: #ccc;
+      --border-strong: #999;
+      --accent: #000;
+    }
+
+    :global(body) {
+      font-size: 10.5pt;
+      line-height: 1.4;
+    }
+
+    .no-print {
+      display: none;
+    }
+
+    .wrap {
+      max-width: none;
+      padding: 0;
+    }
+
+    h2 {
+      margin-top: 1.2rem;
+    }
+
+    .entry {
+      margin-top: 0.8rem;
+    }
+
+    /* Keep a heading with the lines it introduces, and never leave a lone
+       bullet stranded — but let a long entry (Redwood, with three sub-roles)
+       flow across the break rather than dumping half a blank page. */
+    h2,
+    h3,
+    .entry-head,
+    .sub-head {
+      break-after: avoid;
+      break-inside: avoid;
+    }
+
+    li {
+      break-inside: avoid;
+    }
+
+    ul {
+      orphans: 2;
+      widows: 2;
+    }
+
+    a {
+      text-decoration: none;
+    }
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+title: YCU
+category: Consumer product
+period: 'Jan 2026 — Present'
+summary: Sole engineer on a live iOS, Android and web product — dual billing, LLM content safety, 50+ App Store releases.
+tags:
+  ['React Native', 'Expo', 'Next.js 16', 'Supabase', 'Stripe', 'Apple IAP', 'Turborepo']
+url: https://ycu.app
+featured: true
+order: 0
+---
+
+import YcuArchitecture from '../../components/diagrams/YcuArchitecture.astro'
+
+## Problem
+
+Build and ship a consumer social product — group chat, video, challenges — across iOS,
+Android and web, as the only engineer. Everything that a team would normally divide up
+(client, backend, billing, moderation, release management) lands on one person, so the
+architecture has to be chosen for how little it can demand rather than how much it can do.
+
+## Constraints
+
+- **One engineer, three platforms.** Anything that requires maintaining the same feature
+  three times is disqualified.
+- **User-generated content is a launch blocker, not a follow-up.** A social app with
+  chat and video comments cannot ship moderation later — Apple will not approve it, and
+  more to the point it would be the wrong thing to do.
+- **Two payment systems, one truth.** Apple requires IAP for in-app purchases; the web
+  needs Stripe. The product must not care which one a given user came through.
+
+## Approach
+
+<YcuArchitecture />
+
+**One monorepo, shared everywhere.** Expo/React Native for iOS and Android, Next.js 16
+for web, on Turborepo with pnpm, over Supabase. Types, validation and business rules are
+written once and consumed by every client.
+
+**Entitlements as the single source of truth.** Rather than letting Stripe state and
+Apple state leak into feature code, both providers reconcile through webhooks into one
+resolved entitlement record. Every feature gate asks that record one question — *is this
+user entitled?* — and never needs to know about trials, partner codes, receipt
+validation, or which store the subscription came from. This is the piece I would defend
+hardest: it is the difference between adding a second payment provider and rewriting the
+app around one.
+
+**Safety classification before publish, not after.** Every piece of user-generated
+content — group chat messages, video and challenge comments — passes an LLM safety
+classifier on the write path. Clean content publishes; anything flagged routes to an
+admin moderation queue rather than to another user. Reviewing after the fact means
+somebody already saw it.
+
+## Outcome
+
+**Live on the App Store**, with **50+ releases** through Apple App Review, running on
+iOS, Android and web from one codebase.
+
+The dual-billing normalisation and the pre-publish classifier are the two decisions that
+made the rest of the product tractable for one person. Both are cases of paying an
+architectural cost early to avoid paying a per-feature cost forever.

@@ -1,0 +1,106 @@
+---
+import { getCollection } from 'astro:content'
+import Base from '../../layouts/Base.astro'
+
+// Drafts stay out of the build entirely; there is no preview flag to forget.
+const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+)
+
+const formatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+})
+---
+
+<Base title="Writing" description="Notes on AI systems, perception, and shipping software.">
+  <div class="wrap">
+    <a class="back" href="/">← Home</a>
+
+    <main id="main">
+      <h1>Writing</h1>
+
+      {
+        posts.length === 0 ? (
+          <p class="empty">Nothing published yet.</p>
+        ) : (
+          <ul class="posts">
+            {posts.map((post) => (
+              <li>
+                <a href={`/writing/${post.id}/`}>
+                  <p class="mono">
+                    <time datetime={post.data.date.toISOString()}>
+                      {formatter.format(post.data.date)}
+                    </time>
+                  </p>
+                  <h2>{post.data.title}</h2>
+                  <p class="desc">{post.data.description}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </main>
+  </div>
+</Base>
+
+<style>
+  .wrap {
+    max-width: 46rem;
+    margin-inline: auto;
+    padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  }
+
+  .back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    margin-bottom: var(--space-xl);
+  }
+
+  h1 {
+    font-size: var(--step-3);
+  }
+
+  .empty {
+    color: var(--muted);
+    margin-top: var(--space-lg);
+  }
+
+  .posts {
+    margin-top: var(--space-xl);
+    display: grid;
+  }
+
+  .posts li {
+    border-top: 1px solid var(--border);
+  }
+
+  .posts a {
+    display: block;
+    padding-block: var(--space-lg);
+    color: inherit;
+  }
+
+  .posts a:hover {
+    text-decoration: none;
+  }
+
+  .posts h2 {
+    font-size: var(--step-1);
+    margin-top: 0.15rem;
+  }
+
+  .posts a:hover h2 {
+    color: var(--accent);
+  }
+
+  .desc {
+    color: var(--muted);
+    margin-top: var(--space-xs);
+  }
+</style>

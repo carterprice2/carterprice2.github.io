@@ -1,0 +1,115 @@
+---
+import '@fontsource-variable/inter'
+import '@fontsource/ibm-plex-mono/400.css'
+import '@fontsource/ibm-plex-mono/500.css'
+import '../styles/global.css'
+import { site } from '../data/site'
+// Static on purpose — `client:only` hydration can't resolve a dynamic import.
+// In `astro build` this specifier is aliased to src/dev/agentation-stub.ts,
+// which exports null, so the real package never enters the bundle.
+import { Agentation } from 'agentation'
+
+interface Props {
+  title?: string
+  description?: string
+  /** Set on the homepage so the Person JSON-LD is emitted exactly once. */
+  isHome?: boolean
+}
+
+const { title, description = site.description, isHome = false } = Astro.props
+
+const pageTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.role}`
+const canonical = new URL(Astro.url.pathname, Astro.site)
+const ogImage = new URL('/og/default.png', Astro.site)
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: site.role,
+  description: site.description,
+  email: `mailto:${site.email}`,
+  url: Astro.site?.href,
+  address: { '@type': 'PostalAddress', addressLocality: 'Reno', addressRegion: 'NV' },
+  sameAs: [site.links.github, site.links.linkedin],
+}
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={site.name} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0b0e11" />
+
+    <meta property="og:type" content={isHome ? 'profile' : 'article'} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} — Writing`}
+      href={new URL('/rss.xml', Astro.site)}
+    />
+
+    {
+      isHome && (
+        <script
+          type="application/ld+json"
+          is:inline
+          set:html={JSON.stringify(personSchema)}
+        />
+      )
+    }
+
+    {/* Marks JS as available before first paint, so reveal targets start hidden
+        only when we can actually reveal them. Avoids a flash and keeps the page
+        fully readable with JS off. */}
+    <script is:inline>
+      document.documentElement.classList.add('js')
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+
+    {/* Visual feedback toolbar for annotating the page during review.
+        Dev only — `Agentation` is null in a production build, and the React
+        integration isn't even registered there (see astro.config.mjs). */}
+    {Agentation && <Agentation client:only="react" />}
+
+    <script>
+      const targets = document.querySelectorAll('[data-reveal]')
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+
+      if (reduced || !('IntersectionObserver' in window)) {
+        targets.forEach((el) => el.classList.add('is-visible'))
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue
+              entry.target.classList.add('is-visible')
+              observer.unobserve(entry.target)
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px' },
+        )
+        targets.forEach((el) => observer.observe(el))
+      }
+    </script>
+  </body>
+</html>
