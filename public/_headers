@@ -15,7 +15,11 @@
   # file cannot track them. The site has no forms, no user input and no
   # third-party scripts, so there is no injection path for it to widen; the
   # directive still blocks loading script from any external origin.
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  # static.cloudflareinsights.com is Cloudflare Web Analytics, which Pages
+  # injects into every response automatically. Without it allowed here the
+  # beacon is blocked and every page load logs a CSP violation. Turning the
+  # feature off in the dashboard is the alternative — then drop both origins.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
 
 # Legacy orphan page, kept verbatim at its original URL. It predates the
 # rebuild and loads jQuery/Bootstrap from CDNs, so it needs its own policy
