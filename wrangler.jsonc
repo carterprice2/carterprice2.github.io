@@ -1,0 +1,12 @@
+{
+  // Required by Cloudflare Workers Builds. Without this file, production
+  // pushes can still succeed from dashboard settings, but PR preview deploys
+  // run `npx wrangler versions upload` and fail immediately.
+  // `name` must match the Worker in the dashboard.
+  "name": "carterprice2-github-io",
+  "compatibility_date": "2026-08-24",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+  },
+}

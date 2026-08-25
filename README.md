@@ -84,6 +84,7 @@ also gives real 301s instead of meta-refresh, and a preview deployment per PR.
 
 ### Cloudflare-specific files
 
+- **`wrangler.jsonc`** — static-asset Worker config. Required so PR preview builds can run `wrangler versions upload`. `name` must stay `carterprice2-github-io`.
 - **`public/_headers`** — security headers plus long-lived caching for `/_astro/*`.
 - **`public/_redirects`** — 301s for legacy `.html` URLs.
 
