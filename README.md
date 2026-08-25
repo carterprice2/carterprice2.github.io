@@ -84,6 +84,7 @@ also gives real 301s instead of meta-refresh, and a preview deployment per PR.
 
 ### Cloudflare-specific files
 
+- **`wrangler.jsonc`** — static-asset Worker config. Required so PR preview builds can run `wrangler versions upload`. `name` must stay `carterprice2-github-io`.
 - **`public/_headers`** — security headers plus long-lived caching for `/_astro/*`.
 - **`public/_redirects`** — 301s for legacy `.html` URLs.
 
@@ -97,13 +98,10 @@ Handled by `public/_redirects` as 301s on `carterprice.dev`:
 
 - `/goals.html` → `/personal/#goals`
 - `/KneePrehab.html` → `/personal/#knee-prehab`
-- `/work/ycu.html`, `/work/pallet-detection.html` → `/work/{slug}/`
+- `/work/ycu.html`, `/work/pallet-detection.html`, `/work/battery-cell-sorting.html` → `/work/{slug}/`
 - `/BRtrackrecords.html` — a real page, served verbatim at its original URL
 
-`/work/battery-cell-sorting.html` is deliberately **not** redirected — that case study
-is held back (see `draft` in its frontmatter) and should 404.
-
-These 301s only exist on Cloudflare. On the `carterprice2.github.io` mirror those four
+These 301s only exist on Cloudflare. On the `carterprice2.github.io` mirror those
 legacy paths 404, which is an accepted trade: proper 301s on the canonical domain are
 worth more than meta-refresh on a mirror that is expected to be retired.
 
